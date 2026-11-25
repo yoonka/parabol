@@ -170,6 +170,17 @@ const devClientConfig: Configuration = {
         AUTH_SSO_ENABLED: process.env.AUTH_SSO_DISABLED !== 'true',
         microsoftTenantId: process.env.MICROSOFT_TENANT_ID,
         microsoft: process.env.MICROSOFT_CLIENT_ID,
+        AUTH_OIDC_ENABLED:
+          process.env.AUTH_OIDC_DISABLED !== 'true' &&
+          !!process.env.OIDC_ISSUER &&
+          !!process.env.OIDC_CLIENT_ID,
+        oidcClientId: process.env.OIDC_CLIENT_ID,
+        oidcAuthorizationEndpoint:
+          process.env.OIDC_AUTHORIZATION_ENDPOINT ||
+          `${(process.env.OIDC_ISSUER || '').replace(/\/+$/, '')}/oauth/v2/authorize`,
+        oidcScope: process.env.OIDC_SCOPE || 'openid email profile',
+        oidcProviderName: process.env.OIDC_PROVIDER_NAME || 'SSO',
+        oidcLogoUrl: process.env.OIDC_PROVIDER_LOGO_URL,
         GLOBAL_BANNER_ENABLED: process.env.GLOBAL_BANNER_ENABLED === 'true',
         GLOBAL_BANNER_TEXT: process.env.GLOBAL_BANNER_TEXT,
         GLOBAL_BANNER_BG_COLOR: process.env.GLOBAL_BANNER_BG_COLOR,

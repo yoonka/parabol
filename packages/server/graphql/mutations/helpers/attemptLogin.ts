@@ -82,6 +82,7 @@ const attemptLogin = async (
     if (type === AuthIdentityTypeEnum.GOOGLE) return {error: AuthenticationError.USER_EXISTS_GOOGLE}
     if (type === AuthIdentityTypeEnum.MICROSOFT)
       return {error: AuthenticationError.USER_EXISTS_MICROSOFT}
+    if (type === AuthIdentityTypeEnum.OIDC) return {error: AuthenticationError.USER_EXISTS_OIDC}
     throw new Error(`Unknown identity type: ${type}`)
   }
   const {hashedPassword} = localIdentity

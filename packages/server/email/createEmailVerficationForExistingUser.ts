@@ -12,6 +12,11 @@ const createEmailVerficationForExistingUser = async (
   invitationToken: string,
   dataLoader: DataLoaderWorker
 ) => {
+  const skipEmailVerification = process.env.SKIP_EMAIL_VERIFICATION === 'true'
+  if (skipEmailVerification) {
+    // Skip sending verification email if configured
+    return undefined
+  }
   const user = await dataLoader.get('users').loadNonNull(userId)
   const {email, pseudoId, identities} = user
   // Typescript isn't discriminating on the type, manually casted

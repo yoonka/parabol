@@ -65,8 +65,13 @@ const EmailPasswordAuthForm = forwardRef((props: Props, ref: any) => {
   const isSSOAuthEnabled = window.__ACTION__.AUTH_SSO_ENABLED
   const isGoogleAuthEnabled = window.__ACTION__.AUTH_GOOGLE_ENABLED
   const isMicrosoftAuthEnabled = window.__ACTION__.AUTH_MICROSOFT_ENABLED
+  const isOIDCAuthEnabled = window.__ACTION__.AUTH_OIDC_ENABLED
   const isSingleTenantSSO =
-    isSSOAuthEnabled && !isGoogleAuthEnabled && !isMicrosoftAuthEnabled && !isInternalAuthEnabled
+    isSSOAuthEnabled &&
+    !isGoogleAuthEnabled &&
+    !isMicrosoftAuthEnabled &&
+    !isOIDCAuthEnabled &&
+    !isInternalAuthEnabled
   const {getOffsetTop, isPrimary, isSignin, invitationToken, email, goToPage} = props
   const location = useLocation()
   const params = new URLSearchParams(location.search)

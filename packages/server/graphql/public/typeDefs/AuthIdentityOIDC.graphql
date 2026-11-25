@@ -1,0 +1,19 @@
+"""
+An authentication strategy that uses a generic OpenID Connect provider (e.g. Zitadel) configured via OIDC_* environment variables. Present on a user when they have linked or signed in with that provider.
+"""
+type AuthIdentityOIDC implements AuthIdentity {
+  """
+  True if the OIDC provider has verified the email address. Parabol only links OIDC identities with verified emails.
+  """
+  isEmailVerified: Boolean!
+
+  """
+  The authentication strategy discriminator. Always OIDC for this type.
+  """
+  type: AuthIdentityTypeEnum!
+
+  """
+  The subject (sub claim) assigned to the user by the OIDC provider.
+  """
+  id: ID!
+}

@@ -14,4 +14,8 @@ enum AuthIdentityTypeEnum {
   OAuth 2.0 authentication via Microsoft (Azure AD / Entra ID). The user logs in through Microsoft and Parabol receives a verified Microsoft ID token. Includes a tenant ID (tid) that identifies the user's Microsoft organization, enabling tenant-scoped SSO enforcement.
   """
   MICROSOFT
+  """
+  OpenID Connect authentication via a generic provider (e.g. Zitadel) configured with the OIDC_* environment variables. Parabol receives the user's subject and verified email from the provider.
+  """
+  OIDC
 }

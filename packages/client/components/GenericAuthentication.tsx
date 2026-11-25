@@ -17,6 +17,7 @@ import ForgotPasswordPage from './ForgotPasswordPage'
 import GoogleOAuthButtonBlock from './GoogleOAuthButtonBlock'
 import HorizontalSeparator from './HorizontalSeparator/HorizontalSeparator'
 import MicrosoftOAuthButtonBlock from './MicrosoftOAuthButtonBlock'
+import OIDCOAuthButtonBlock from './OIDCOAuthButtonBlock'
 import PlainButton from './PlainButton/PlainButton'
 import SubmittedForgotPasswordPage from './SubmittedForgotPasswordPage'
 
@@ -45,6 +46,7 @@ const GenericAuthentication = (props: Props) => {
   const getOffsetTop = () => authDialogRef.current?.offsetTop || 0
   const isGoogleAuthEnabled = window.__ACTION__.AUTH_GOOGLE_ENABLED
   const isMicrosoftAuthEnabled = window.__ACTION__.AUTH_MICROSOFT_ENABLED
+  const isOIDCAuthEnabled = window.__ACTION__.AUTH_OIDC_ENABLED
   const isInternalAuthEnabled = window.__ACTION__.AUTH_INTERNAL_ENABLED
   const isSSOAuthEnabled = window.__ACTION__.AUTH_SSO_ENABLED
   const isCreate = page === 'create-account'
@@ -86,6 +88,13 @@ const GenericAuthentication = (props: Props) => {
           {counterAction}
         </PlainButton>
       </div>
+      {isOIDCAuthEnabled && (
+        <OIDCOAuthButtonBlock
+          isCreate={isCreate}
+          invitationToken={invitationToken}
+          getOffsetTop={getOffsetTop}
+        />
+      )}
       {isGoogleAuthEnabled && (
         <GoogleOAuthButtonBlock
           isCreate={isCreate}
@@ -100,7 +109,7 @@ const GenericAuthentication = (props: Props) => {
           getOffsetTop={getOffsetTop}
         />
       )}
-      {(isGoogleAuthEnabled || isMicrosoftAuthEnabled) &&
+      {(isGoogleAuthEnabled || isMicrosoftAuthEnabled || isOIDCAuthEnabled) &&
         (isInternalAuthEnabled || isSSOAuthEnabled) && (
           <HorizontalSeparator margin='1rem 0 0' text='or' />
         )}

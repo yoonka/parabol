@@ -29,6 +29,9 @@ const loginWithPassword: MutationResolvers['loginWithPassword'] = async (
   if (error === AuthenticationError.USER_EXISTS_MICROSOFT) {
     return userErrorResult('SIGN_IN_WITH_MICROSOFT', 'Try logging in with Microsoft')
   }
+  if (error === AuthenticationError.USER_EXISTS_OIDC) {
+    return userErrorResult('SIGN_IN_WITH_OIDC', `Try logging in with ${process.env.OIDC_PROVIDER_NAME || 'SSO'}`)
+  }
   return userErrorResult('INVALID_CREDENTIALS', 'Invalid email or password')
 }
 

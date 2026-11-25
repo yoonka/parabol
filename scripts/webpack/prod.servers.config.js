@@ -31,6 +31,58 @@ const SHARP_LIBVIPS_ROOT = path.dirname(
   require.resolve(`@img/sharp-libvips-${runtimePlatform}/package`, {paths: [SHARP_ROOT]})
 )
 
+// Helper to create rrule-rust aliases - ignore all platforms except current build target
+const getRRuleRustAliases = () => {
+  // All rrule-rust platform packages
+  const allRRulePlatforms = [
+    'android-arm-eabi',
+    'android-arm64',
+    'darwin-arm64',
+    'darwin-universal',
+    'darwin-x64',
+    'freebsd-x64',
+    'linux-arm-gnueabihf',
+    'linux-arm-musleabihf',
+    'linux-arm64-gnu',
+    'linux-arm64-musl',
+    'linux-riscv64-gnu',
+    'linux-s390x-gnu',
+    'linux-x64-gnu',
+    'linux-x64-musl',
+    'win32-arm64-msvc',
+    'win32-ia32-msvc',
+    'win32-x64-msvc'
+  ]
+
+  // Map Node.js platform-arch to rrule-rust package suffix
+  const platformMap = {
+    'linux-x64': 'linux-x64-gnu', // Default to gnu on linux-x64
+    'linux-arm64': 'linux-arm64-gnu',
+    'linux-arm': 'linux-arm-gnueabihf',
+    'darwin-x64': 'darwin-x64',
+    'darwin-arm64': 'darwin-arm64',
+    'win32-x64': 'win32-x64-msvc',
+    'win32-ia32': 'win32-ia32-msvc',
+    'win32-arm64': 'win32-arm64-msvc'
+  }
+
+  // Allow override via environment variable (useful for cross-compilation)
+  // Set RRULE_RUST_PLATFORM='none' to force JS fallback for all platforms
+  const envPlatform = process.env.RRULE_RUST_PLATFORM
+  const currentPlatform = envPlatform === 'none' ? null : (envPlatform || platformMap[runtimePlatform] || null)
+
+  // Create aliases to ignore all platforms except the current one
+  // If currentPlatform is null, ignore all platforms (force JS fallback)
+  const aliases = {}
+  allRRulePlatforms.forEach((platform) => {
+    if (currentPlatform === null || platform !== currentPlatform) {
+      aliases[`@rrule-rust/lib-${platform}`] = false
+    }
+  })
+
+  return aliases
+}
+
 module.exports = (config) => {
   const noDeps = config.noDeps === 'true'
   const nestedUsage = getNestedUsage()
@@ -89,7 +141,9 @@ module.exports = (config) => {
         'parabol-client': CLIENT_ROOT,
         'parabol-server': SERVER_ROOT,
         // this is for radix-ui, we import & transform ESM packages, but they can't find react/jsx-runtime
-        'react/jsx-runtime': require.resolve('react/jsx-runtime')
+        'react/jsx-runtime': require.resolve('react/jsx-runtime'),
+        // Dynamically ignore rrule-rust native binaries for non-matching platforms
+        ...getRRuleRustAliases()
       },
       extensions: ['.mjs', '.js', '.json', '.ts', '.tsx', '.graphql']
     },
@@ -108,6 +162,9 @@ module.exports = (config) => {
       // Not minifying costs us ~50MB extra, but it doesn't require sourcemaps & compiles 90s faster
       minimize: false
     },
+    ignoreWarnings: [
+      /the request of a dependency is an expression/
+    ],
     plugins: [
       // Pro tip: comment this out along with stable entry files for quick debugging
       new CleanWebpackPlugin(),
@@ -153,6 +210,13 @@ module.exports = (config) => {
       new webpack.IgnorePlugin({
         // the prebuilt binary finds libvips via rpath, the dylib itself is copied below
         resourceRegExp: /^@img\/sharp-libvips-[^/]+\/binary$/
+      }),
+      // Ignore optional ws dependencies
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^bufferutil$/
+      }),
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^utf-8-validate$/
       }),
       new CopyWebpackPlugin({
         patterns: [

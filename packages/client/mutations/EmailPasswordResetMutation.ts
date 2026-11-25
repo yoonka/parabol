@@ -7,6 +7,7 @@ import {snackOnError} from './handlers/snackOnError'
 export enum ForgotPasswordResType {
   GOOGLE = 'goog',
   MICROSOFT = 'ms',
+  OIDC = 'oidc',
   SAML = 'saml',
   SUCCESS = 'success'
 }
@@ -42,6 +43,8 @@ const EmailPasswordResetMutation: StandardMutation<TEmailPasswordResetMutation, 
           params.set('type', ForgotPasswordResType.GOOGLE)
         } else if (code === 'SIGN_IN_WITH_MICROSOFT') {
           params.set('type', ForgotPasswordResType.MICROSOFT)
+        } else if (code === 'SIGN_IN_WITH_OIDC') {
+          params.set('type', ForgotPasswordResType.OIDC)
         } else if (code === 'SIGN_IN_WITH_SSO') {
           params.set('type', ForgotPasswordResType.SAML)
         } else return

@@ -244,6 +244,7 @@ export default class Atmosphere extends Environment {
       request.name === 'useDeleteUserMutation' ||
       request.name === 'ReAuthWithGoogleMutation' ||
       request.name === 'ReAuthWithMicrosoftMutation' ||
+      request.name === 'ReAuthWithOIDCMutation' ||
       request.name === 'ReAuthWithPasswordMutation'
     const useHTTP = !!uploadables || !this.authObj || !this.isSocketConnected || isAuth
     if (useHTTP) {

@@ -82,6 +82,11 @@ const emailPasswordReset: MutationResolvers['emailPasswordReset'] = async (
     return noEmailSent('SIGN_IN_WITH_MICROSOFT', 'Try logging in with Microsoft')
   }
 
+  const oidcIdentity = identities.find((identity) => identity.type === AuthIdentityTypeEnum.OIDC)
+  if (oidcIdentity) {
+    return noEmailSent('SIGN_IN_WITH_OIDC', `Try logging in with ${process.env.OIDC_PROVIDER_NAME || 'SSO'}`)
+  }
+
   const localIdentity = identities.find(
     (identity) => identity.type === AuthIdentityTypeEnum.LOCAL
   ) as AuthIdentityLocal

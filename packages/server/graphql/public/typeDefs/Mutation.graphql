@@ -1798,6 +1798,31 @@ type Mutation {
   ): UserLogInPayload! @scope(name: USERS_WRITE)
 
   """
+  Sign up or login using the configured OpenID Connect provider (e.g. Zitadel)
+  """
+  loginWithOIDC(
+    """
+    The code provided from the OAuth2 flow
+    """
+    code: ID!
+
+    """
+    optional pseudo id created before they were a user
+    """
+    pseudoId: ID
+
+    """
+    if present, the user is also joining a team
+    """
+    invitationToken: ID
+
+    """
+    query params on the login page, used to maybe add feature flag
+    """
+    params: String!
+  ): UserLogInPayload! @scope(name: USERS_WRITE)
+
+  """
   Login using an email address and password
   """
   loginWithPassword(email: ID!, password: String!): UserLogInPayload! @scope(name: USERS_WRITE)

@@ -64,6 +64,12 @@ interface Window {
     AUTH_SSO_ENABLED: boolean
     microsoftTenantId: string
     microsoft: string
+    AUTH_OIDC_ENABLED: boolean
+    oidcClientId: string
+    oidcAuthorizationEndpoint: string
+    oidcScope: string
+    oidcProviderName: string
+    oidcLogoUrl: string | undefined
     GLOBAL_BANNER_ENABLED: boolean
     GLOBAL_BANNER_TEXT: string
     GLOBAL_BANNER_BG_COLOR: string

@@ -8,6 +8,7 @@ import type {AuthPageSlug, GotoAuthPage} from './GenericAuthentication'
 import GoogleOAuthButtonBlock from './GoogleOAuthButtonBlock'
 import IconLabel from './IconLabel'
 import MicrosoftOAuthButtonBlock from './MicrosoftOAuthButtonBlock'
+import OIDCOAuthButtonBlock from './OIDCOAuthButtonBlock'
 import PlainButton from './PlainButton/PlainButton'
 
 type TextField = {
@@ -76,6 +77,21 @@ const SubmittedForgotPasswordPage = (props: Props) => {
       button: (
         <div className='pt-2'>
           <MicrosoftOAuthButtonBlock isCreate={false} invitationToken={token} />
+        </div>
+      )
+    },
+    [ForgotPasswordResType.OIDC]: {
+      title: 'Oops!',
+      descriptionOne: `It looks like you signed up with ${window.__ACTION__.oidcProviderName}.`,
+      descriptionTwo: (
+        <>
+          {`Try signing in with ${window.__ACTION__.oidcProviderName} or `}
+          {contactSupportCopy}
+        </>
+      ),
+      button: (
+        <div className='pt-2'>
+          <OIDCOAuthButtonBlock isCreate={false} invitationToken={token} />
         </div>
       )
     },

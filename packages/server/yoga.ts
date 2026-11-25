@@ -172,6 +172,7 @@ export const yoga = createYoga<ServerContext, UserContext>({
         'loginSAML',
         'loginWithGoogle',
         'loginWithMicrosoft',
+        'loginWithOIDC',
         'loginWithPassword',
         'moveTeamToOrg',
         'promoteToTeamLead',

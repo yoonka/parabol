@@ -21,11 +21,12 @@ const updateEmail: MutationResolvers['updateEmail'] = async (_source, {oldEmail,
   }
 
   const {id: userId, identities} = user
+  const skipEmailVerification = process.env.SKIP_EMAIL_VERIFICATION === 'true'
 
   if (identities && identities.length > 0) {
     const localIdentity = (identities as JsonObject[]).find((identity) => identity.type === 'LOCAL')
     if (localIdentity) {
-      localIdentity.isEmailVerified = false
+      localIdentity.isEmailVerified = skipEmailVerification ? true : false
     }
   }
 

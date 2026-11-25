@@ -18,6 +18,11 @@ enum UserErrorCode {
   SIGN_IN_WITH_MICROSOFT
 
   """
+  The account signs in with the configured OpenID Connect provider
+  """
+  SIGN_IN_WITH_OIDC
+
+  """
   The account's organization requires single sign-on
   """
   SIGN_IN_WITH_SSO

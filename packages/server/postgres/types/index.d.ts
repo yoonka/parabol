@@ -249,7 +249,7 @@ export type IntegrationDimensionFieldMap = ExtractTypeFromQueryBuilderSelect<
   typeof selectIntegrationDimensionFieldMap
 >
 
-export type TAuthIdentity = 'GOOGLE' | 'LOCAL' | 'MICROSOFT'
+export type TAuthIdentity = 'GOOGLE' | 'LOCAL' | 'MICROSOFT' | 'OIDC'
 
 export type UserAuthIdentity = {
   id: string

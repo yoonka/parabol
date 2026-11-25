@@ -14,7 +14,9 @@ import {cn} from '../ui/cn'
 import GoogleClientManager from '../utils/GoogleClientManager'
 import loginSSO from '../utils/loginSSO'
 import MicrosoftClientManager from '../utils/MicrosoftClientManager'
+import OIDCClientManager from '../utils/OIDCClientManager'
 import UnderlineInput from './InputField/UnderlineInput'
+import {OIDCProviderLogo} from './OIDCOAuthButtonBlock'
 import StyledError from './StyledError'
 
 interface Props {
@@ -44,10 +46,12 @@ const DeleteAccountReAuthStep = ({viewerRef, onReAuthSuccess}: Props) => {
 
   const googleMutationProps = useMutationProps({errorDisplay: 'inline'})
   const microsoftMutationProps = useMutationProps({errorDisplay: 'inline'})
+  const oidcMutationProps = useMutationProps({errorDisplay: 'inline'})
 
   const hasLocal = identities?.some((i) => i?.type === AuthIdentityTypeEnum.LOCAL)
   const hasGoogle = identities?.some((i) => i?.type === AuthIdentityTypeEnum.GOOGLE)
   const hasMicrosoft = identities?.some((i) => i?.type === AuthIdentityTypeEnum.MICROSOFT)
+  const hasOIDC = identities?.some((i) => i?.type === AuthIdentityTypeEnum.OIDC)
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value)
@@ -75,6 +79,10 @@ const DeleteAccountReAuthStep = ({viewerRef, onReAuthSuccess}: Props) => {
 
   const handleMicrosoftReAuth = () => {
     MicrosoftClientManager.openReAuth(atmosphere, microsoftMutationProps, onReAuthSuccess)
+  }
+
+  const handleOIDCReAuth = () => {
+    OIDCClientManager.openReAuth(atmosphere, oidcMutationProps, onReAuthSuccess)
   }
 
   const handleSSOReAuth = async () => {
@@ -108,7 +116,7 @@ const DeleteAccountReAuthStep = ({viewerRef, onReAuthSuccess}: Props) => {
     )
   }
 
-  const showDivider = hasLocal && (hasGoogle || hasMicrosoft)
+  const showDivider = hasLocal && (hasGoogle || hasMicrosoft || hasOIDC)
 
   return (
     <div className='flex w-full max-w-[240px] flex-col items-stretch gap-4'>
@@ -196,6 +204,30 @@ const DeleteAccountReAuthStep = ({viewerRef, onReAuthSuccess}: Props) => {
             {microsoftMutationProps.error && !microsoftMutationProps.submitting && (
               <StyledError className='mt-2 text-[.8125rem]'>
                 {microsoftMutationProps.error.message}
+              </StyledError>
+            )}
+          </div>
+        )}
+        {hasOIDC && (
+          <div>
+            <Button
+              variant='raised'
+              size='sm'
+              onClick={handleOIDCReAuth}
+              disabled={oidcMutationProps.submitting}
+              className={cn(
+                'h-10 w-60 justify-start bg-slate-200 px-4 text-slate-700 text-sm disabled:opacity-100',
+                oidcMutationProps.submitting
+                  ? 'bg-slate-300 text-slate-600'
+                  : 'bg-white text-slate-700'
+              )}
+            >
+              <OIDCProviderLogo dimmed={oidcMutationProps.submitting} />
+              <div>Sign in with {window.__ACTION__.oidcProviderName}</div>
+            </Button>
+            {oidcMutationProps.error && !oidcMutationProps.submitting && (
+              <StyledError className='mt-2 text-[.8125rem]'>
+                {oidcMutationProps.error.message}
               </StyledError>
             )}
           </div>

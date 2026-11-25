@@ -274,6 +274,10 @@ const permissionMap: PermissionMap<Resolvers> = {
       not(isEnvVarTrue('AUTH_MICROSOFT_DISABLED')),
       rateLimit({perMinute: 50, perHour: 500})
     ),
+    loginWithOIDC: and(
+      not(isEnvVarTrue('AUTH_OIDC_DISABLED')),
+      rateLimit({perMinute: 50, perHour: 500})
+    ),
     loginWithPassword: and(
       not(isEnvVarTrue('AUTH_INTERNAL_DISABLED')),
       rateLimit({perMinute: 50, perHour: 500})
